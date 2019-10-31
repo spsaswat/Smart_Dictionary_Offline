@@ -5,3 +5,5 @@ It uses a database to store words.
 
 link for the apk file -->
 https://drive.google.com/open?id=1-1h6hGAbHgTIUwscoNcVB8F-xRKqwCuk
+
+location for the database file --> SmartDictionaryOffline/app/src/main/assets/garbage.db
