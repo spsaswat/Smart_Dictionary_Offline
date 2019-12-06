@@ -3,6 +3,7 @@ package com.example.smartdictionaryoffline;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
@@ -10,8 +11,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 public class new_words extends AppCompatActivity {
-    EditText Et1,Et2;
-    String word,mean;
+    EditText Et1,Et2,Et5,Et6;
+    String word="",mean="",word1="",word2="";
+    String word_mean="";
     DbHelper dbHelper;
     int flag;
     @Override
@@ -20,6 +22,8 @@ public class new_words extends AppCompatActivity {
         setContentView(R.layout.activity_new_words);
         Et1=findViewById(R.id.editText2);
         Et2=findViewById(R.id.editText3);
+        Et5=findViewById(R.id.editText5);
+        Et6=findViewById(R.id.editText6);
         dbHelper = new DbHelper(this,1,"garbage.db");
         try{
             dbHelper.openDatabase();
@@ -44,11 +48,15 @@ public class new_words extends AppCompatActivity {
         flag=0;
         word=Et1.getText().toString();
         mean=Et2.getText().toString();
-        flag=dbHelper.insert_word(word,mean);
-        if(flag==0)
-            Toast.makeText(this, "Word could not be added!", Toast.LENGTH_SHORT).show();
+        if((word.length()!=0)&&(mean.length()!=0)) {
+            flag = dbHelper.insert_word(word, mean);
+            if (flag == 0)
+                Toast.makeText(this, "Word could not be added!", Toast.LENGTH_SHORT).show();
+            else
+                Toast.makeText(this, "Word added!", Toast.LENGTH_SHORT).show();
+        }
         else
-            Toast.makeText(this, "Word added!", Toast.LENGTH_SHORT).show();
+            showMessage("Err!","Empty word not accepted");
     }
 
     public void view_all_asc(View view) {
@@ -61,12 +69,36 @@ public class new_words extends AppCompatActivity {
 
         while (res.moveToNext()){
             buffer.append(" Word:- "+res.getString(0)+"\n");
-            buffer.append(" Meaning:- \n"+res.getString(1)+"\n\n\n");
+            buffer.append(" Meaning/Note:- \n"+res.getString(1)+"\n\n\n");
 
         }
-        showMessage("New words(Ascending)",buffer.toString());
+        showMessage("word/note_id arranged in alphabetic order",buffer.toString());
     }
 
+
+    public void speak_nw(View view) {
+        word1=Et5.getText().toString();
+        word_mean=dbHelper.GetMean_nw(word1);
+        if(word1!=""&&word_mean!=null) {
+            Intent intent = new Intent(this, read_text.class);
+            intent.putExtra("COMMON", word1 + "\n\n" + word_mean);
+            startActivity(intent);
+        }
+        else{
+            Toast.makeText(this, "ERR! Word/Note can't be read!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public void delete_1_nw(View view) {
+        word2=Et6.getText().toString();
+        int r=dbHelper.delete_nw(word2);
+        if(r==1)
+            Toast.makeText(this, "Word/Note removed!", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Word/Note could not be removed!", Toast.LENGTH_SHORT).show();
+
+    }
 
 
 }
