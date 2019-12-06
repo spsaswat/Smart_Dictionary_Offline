@@ -3,9 +3,11 @@ package com.example.smartdictionaryoffline;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.speech.tts.TextToSpeech;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -21,17 +23,21 @@ import java.util.Date;
 
 import java.util.ArrayList;
 
+
 public class MainActivity extends AppCompatActivity {
     AutoCompleteTextView autoCompleteTextView;
     int flag;
-    String word="",tmp="",meaning="";
+    String word="",meaning="";
+    String meaning1="";
+
+
 
     ArrayList<String> arrayList;
 
     DbHelper dbHelper;
 
 
-    TextView textView,textView_4;
+    TextView textView,textView_4,textView_5;
 
 
     Date c = Calendar.getInstance().getTime();
@@ -83,6 +89,8 @@ public class MainActivity extends AppCompatActivity {
 
         textView = findViewById(R.id.txtmean);
         textView_4= findViewById(R.id.textView4);
+        textView_5=findViewById(R.id.textView5);
+
 
         autoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -95,15 +103,19 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+
     }
 
     public void meaning(View view) {
-        tmp=word;
+
         if(word.length()!=0)
         {
             flag=0;
             meaning=dbHelper.GetMean(word);
+            meaning1=word+":-\n\n"+meaning;
             textView_4.setText("                 Add to Bookmarks");
+            textView_5.setText("                           Read");
             flag=dbHelper.insertData_hist(word,meaning,formattedDate);
         }
         else
@@ -130,4 +142,22 @@ public class MainActivity extends AppCompatActivity {
         Intent intent=new Intent(this,history.class);
         startActivity(intent);
     }
+
+    public void add_word_page(View view) {
+
+            Intent intent=new Intent(this,new_words.class);
+            startActivity(intent);
+
+    }
+
+
+    public void speak(View view) {
+
+        Intent intent=new Intent(this,read_text.class);
+        intent.putExtra("COMMON", meaning1);
+        startActivity(intent);
+    }
+
+
+
 }
