@@ -11,4 +11,6 @@ location for the database file --> SmartDictionaryOffline/app/src/main/assets/ga
 
 Edit:
 
-The dictionary is now a voice dictionary. It takes and provides voice input and output respectively.
+The dictionary is now a voice dictionary. It takes and provides voice input and output respectively
+
+https://twitter.com/i/status/1202985762704089088
